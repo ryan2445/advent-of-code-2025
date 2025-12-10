@@ -9,10 +9,22 @@ with open("day_5_input.txt", "r") as f:
 
 ans = 0
 
-for id in ids:
-    for start, end in ranges:
-        if start <= id <= end:
-            ans += 1
-            break
+# Part 1
+# for id in ids:
+#     for start, end in ranges:
+#         if start <= id <= end:
+#             ans += 1
+#             break
+
+# Part 2
+ranges.sort()
+merged = []
+for start, end in ranges:
+    if not merged or merged[-1][1] < start:
+        merged.append([start, end])
+    else:
+        merged[-1][1] = max(merged[-1][1], end)
+for start, end in merged:
+    ans += end - start + 1
 
 print(ans)
