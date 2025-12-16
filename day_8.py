@@ -19,12 +19,11 @@ class UnionFind:
         root_x = self.find(x)
         root_y = self.find(y)
         if root_x == root_y:
-            return False
+            return
         if root_x < root_y:
             self.parent[root_x] = root_y
         else:
             self.parent[root_y] = root_x
-        return True
 
 
 def euclidean_distance(x1, y1, z1, x2, y2, z2):
@@ -40,19 +39,14 @@ for i in range(num_coordinates):
         distances.append((distance, i, j))
 distances.sort()
 
-directly_connected = set()
 uf = UnionFind(num_coordinates)
-connections_to_make = 1000
 for _, i, j in distances:
-    if connections_to_make == 0:
-        break
-    if (i, j) in directly_connected or (j, i) in directly_connected:
-        continue
-    directly_connected.add((i, j))
-    connections_to_make -= 1
     uf.union(i, j)
+    if all(uf.find(k) == uf.find(0) for k in range(num_coordinates)):
+        print(coordinates[i][0] * coordinates[j][0])
+        break
 
-roots = [uf.find(i) for i in range(num_coordinates)]
-sizes = sorted(Counter(roots).values(), reverse=True)
-top_3_product = prod(sizes[:3])
-print(top_3_product)
+# roots = [uf.find(i) for i in range(num_coordinates)]
+# sizes = sorted(Counter(roots).values(), reverse=True)
+# top_3_product = prod(sizes[:3])
+# print(top_3_product)
