@@ -1,4 +1,5 @@
 from collections import defaultdict
+from time import sleep
 
 
 with open("day_11_input.txt") as f:
@@ -12,16 +13,30 @@ with open("day_11_input.txt") as f:
             graph[source].add(destination)
 
 
-def unique_paths(graph, start, end):
+def unique_paths(graph, start, end, has_dac, has_fft, memo):
+    if (start, has_dac, has_fft) in memo:
+        return memo[(start, has_dac, has_fft)]
+
     if start == end:
-        return 1
+        if has_dac and has_fft:
+            return 1
+        return 0
 
     ans = 0
 
     for neighbor in graph[start]:
-        ans += unique_paths(graph, neighbor, end)
+        ans += unique_paths(
+            graph,
+            neighbor,
+            end,
+            neighbor == "dac" or has_dac,
+            neighbor == "fft" or has_fft,
+            memo,
+        )
 
+    memo[(start, has_dac, has_fft)] = ans
     return ans
 
 
-print(unique_paths(graph, "you", "out"))
+memo = {}
+print(unique_paths(graph, "svr", "out", False, False, memo))
